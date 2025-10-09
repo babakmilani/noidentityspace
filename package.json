@@ -1,0 +1,23 @@
+{
+  "name": "noidentity-space",
+  "version": "1.0.0",
+  "description": "Digital privacy website built with Vite for fast deployment.",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist"
+  },
+  "keywords": [
+    "vite",
+    "static",
+    "github-pages"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gh-pages": "^6.1.1",
+    "vite": "^5.2.0"
+  }
+}
