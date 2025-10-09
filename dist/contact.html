@@ -12,324 +12,67 @@
     <meta property="og:type" content="website">
     <title>Contact Us | Creator Hub</title>
 
-    <style>
-        /* CSS adapted from the template files (omitted for brevity, keep the original styles) */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #0ea5e9;
-            --dark: #0f172a;
-            --dark-light: #1e293b;
-            --gray: #64748b;
-            --light: #f1f5f9;
-            --white: #ffffff;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.7;
-            color: #1f2937;
-            background: var(--white);
-        }
-
-        /* Header */
-        header {
-            background: var(--dark);
-            color: var(--white);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .logo span {
-            color: var(--secondary);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--white);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        /* Page Header */
-        .article-header {
-            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-light) 100%);
-            color: var(--white);
-            padding: 4rem 2rem 2rem;
-            text-align: center;
-        }
-
-        .article-header h1 {
-            font-size: 2.5rem;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Main Layout */
-        .article-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 3rem;
-        }
-
-        /* Article Content (Form) */
-        .article-content {
-            background: var(--white);
-            max-width: 800px;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--dark);
-            font-size: 1rem;
-        }
-
-        .form-group input:not([type="checkbox"]),
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--light);
-            border-radius: 8px;
-            font-size: 1rem;
-            background: var(--light);
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-            background: var(--white);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 150px;
-        }
-
-        .submit-btn {
-            display: block;
-            width: 100%;
-            padding: 1rem;
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            border-radius: 8px;
-            font-size: 1.125rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s, opacity 0.3s;
-        }
-
-        .submit-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        .submit-btn:disabled {
-            background: var(--gray);
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        /* Message Box */
-        .message-box {
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-top: 1.5rem;
-            display: none;
-        }
-
-        .message-success {
-            background: #ecfdf5;
-            border-left: 4px solid #10b981;
-            color: #065f46;
-        }
-
-        .message-error {
-            background: #fef2f2;
-            border-left: 4px solid #ef4444;
-            color: #991b1b;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-        }
-
-        .sidebar-section {
-            background: var(--light);
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-        }
-
-        .sidebar-section h3 {
-            color: var(--dark);
-            margin-bottom: 1rem;
-            font-size: 1.25rem;
-        }
-
-        .contact-info p {
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
-            color: var(--gray);
-        }
-
-        .contact-info a {
-            color: var(--primary);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .contact-info a:hover {
-            color: var(--primary-dark);
-        }
-
-        /* Ad Placeholder */
-        .ad-placeholder {
-            background: var(--light);
-            border: 2px dashed var(--gray);
-            padding: 2rem;
-            text-align: center;
-            color: var(--gray);
-            margin: 2rem 0;
-            border-radius: 8px;
-        }
-
-        /* Footer */
-        .main-footer {
-            background: var(--dark);
-            color: var(--white);
-            padding: 2rem;
-            text-align: center;
-            margin-top: 4rem;
-        }
-
-        .main-footer .footer-links a {
-            color: var(--primary);
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 968px) {
-            .article-container {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                position: static;
-            }
-
-            .article-header h1 {
-                font-size: 2rem;
-            }
-        }
-    </style>
-  <script type="module" crossorigin src="/noidentityspace/assets/contact-BxWBmyTn.js"></script>
-  <link rel="modulepreload" crossorigin href="/noidentityspace/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <script type="module" crossorigin src="/noidentityspace/assets/contact-B7PsYDVO.js"></script>
+  <link rel="modulepreload" crossorigin href="/noidentityspace/assets/styles-Cu5RuLse.js">
+  <link rel="stylesheet" crossorigin href="/noidentityspace/assets/styles-DrbB6pch.css">
 </head>
 
 <body>
+
     <header>
         <nav>
-            <a href="index.html" class="logo">Creator<span>Hub</span></a>
+            <a href="index.html" class="logo">no<span>identity</span>.space</a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="index.html#community">Community</a></li>
-                <li><a href="about-me.html">About Me</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="index.html#articles">Articles</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
             </ul>
         </nav>
     </header>
 
     <div class="article-header">
-        <h1>Send Us a Message</h1>
-        <p style="color: var(--light); font-size: 1.25rem; margin-top: 1rem;">
-            We're here to answer your questions and hear your feedback.
-        </p>
+        <h1>Contact Us</h1>
+        <p>We're here to help you on your journey to digital freedom.</p>
     </div>
 
     <div class="article-container">
-        <article class="article-content">
-            <form id="contactForm" method="POST">
+        <main class="article-content">
+            <p style="margin-bottom: 2rem;">If you have general inquiries, partnership proposals, or questions about a
+                specific guide, please use the form below. We aim to respond within 48 hours.</p>
 
+            <form id="contact-form" action="submit-form-endpoint.php" method="POST">
                 <div class="form-group">
-                    <label for="name">Your Name</label>
-                    <input type="text" id="name" name="name" required>
+                    <label for="name">Your Name (optional)</label>
+                    <input type="text" id="name" name="name" placeholder="John Doe">
                 </div>
-
                 <div class="form-group">
                     <label for="email">Your Email Address</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" placeholder="example@protonmail.com" required>
                 </div>
-
                 <div class="form-group">
                     <label for="subject">Subject</label>
-                    <input type="text" id="subject" name="subject" required>
+                    <input type="text" id="subject" name="subject" placeholder="Question about VPN article" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" placeholder="Type your message here..." required></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" name="message" required></textarea>
+                    <label for="captcha">Simple Math Question: 5 + 3 = ?</label>
+                    <input type="text" id="captcha" name="captcha" placeholder="Your answer" required>
                 </div>
 
-                <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
+                <button type="submit" class="submit-btn" id="submit-btn">Send Message</button>
+                <div id="message-box" class="message-box"></div>
             </form>
-
-            <div id="responseMessage" class="message-box"></div>
-        </article>
+        </main>
 
         <aside class="sidebar">
             <div class="sidebar-section">
-                <h3>General Contact Info</h3>
+                <h3>Alternative Contact</h3>
                 <div class="contact-info">
                     <p>For business inquiries, collaborations, or large proposals, please use the following dedicated
                         email:</p>
@@ -360,6 +103,9 @@
             </div>
         </div>
     </footer>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2379517169183719"
+        crossorigin="anonymous"></script>
 
 </body>
 

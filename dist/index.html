@@ -10,13 +10,13 @@
     <meta name="keywords" content="digital privacy, online anonymity, VPN, encryption, digital detox, data protection">
     <title>NoIdentity.Space - Reclaim Your Digital Freedom</title>
 
-    <!-- Load AdSense script if needed (Keep non-module scripts here) -->
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2379517169183719"
         crossorigin="anonymous"></script>
 
-  <script type="module" crossorigin src="/noidentityspace/assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
-  <script type="module" crossorigin src="/noidentityspace/assets/main-Dx4vgSco.js"></script>
-  <link rel="stylesheet" crossorigin href="/noidentityspace/assets/main-H44bcjDZ.css">
+  <script type="module" crossorigin src="/noidentityspace/assets/styles-Cu5RuLse.js"></script>
+  <script type="module" crossorigin src="/noidentityspace/assets/main-CE5hq_Zq.js"></script>
+  <link rel="stylesheet" crossorigin href="/noidentityspace/assets/styles-DrbB6pch.css">
 </head>
 
 <body>
@@ -91,84 +91,78 @@
                         <h3>The Best Privacy-Focused Apps of 2025</h3>
                         <p>Discover the must-have privacy apps across messaging, browsers, email, and cloud storage to
                             protect your data.</p>
-                        <span>Digital Security</span>
-                    </div>
-                </a>
-
-                <a href="articles/password-managers-ultimate-guide.html" class="article-card">
-                    <img src="https://placehold.co/600x400/10b981/ffffff?text=Password+Managers"
-                        alt="Password Managers Guide" loading="lazy">
-                    <div class="card-content">
-                        <h3>Password Managers: The Ultimate Guide</h3>
-                        <p>Learn why password managers are essential for security and how to choose the best one for
-                            your needs.</p>
-                        <span>Digital Security</span>
-                    </div>
-                </a>
-
-                <a href="articles/neural-privacy-the-next-frontier.html" class="article-card">
-                    <img src="https://placehold.co/600x400/ef4444/ffffff?text=Neural+Privacy" alt="Neural Privacy"
-                        loading="lazy">
-                    <div class="card-content">
-                        <h3>Neural Privacy: The Next Frontier</h3>
-                        <p>Explore the emerging concerns of brain data collection and why we need cognitive liberty in
-                            2025.</p>
-                        <span>Privacy News</span>
+                        <span>Digital Privacy</span>
                     </div>
                 </a>
             </div>
             <div class="view-all">
-                <a href="articles.html" class="btn btn-primary">View All Articles</a>
+                <a href="#topics" class="btn cta-button">Explore All Topics</a>
             </div>
         </div>
     </section>
 
-    <section class="community-box" id="community">
+    <section class="topics" id="topics">
         <div class="container">
-            <h2>Join the NoIdentity Community</h2>
-            <p>Get exclusive privacy tips, actionable guides, and alerts on major security breaches delivered directly
-                to
-                your inbox.</p>
-
-            <form id="subscribeForm" onsubmit="handleSubmit(event)">
-                <div class="form-group">
-                    <label for="name">Your Name</label>
-                    <input type="text" id="name" name="name" required placeholder="John Doe">
+            <h2>Core Topics</h2>
+            <p class="subtitle">Deep dive into the areas that matter most for your digital life.</p>
+            <div class="topic-grid">
+                <div class="topic-card">
+                    <i class="fas fa-lock"></i>
+                    <h3>Digital Privacy</h3>
+                    <p>Guides on data minimization, privacy settings, and understanding online trackers.</p>
+                    <a href="#" class="cta-link">View Guides &rarr;</a>
                 </div>
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required placeholder="privacyseeker@email.com">
+                <div class="topic-card">
+                    <i class="fas fa-mask"></i>
+                    <h3>Online Anonymity</h3>
+                    <p>Tools and methods for anonymous browsing, encrypted communication, and avoiding surveillance.</p>
+                    <a href="#" class="cta-link">View Guides &rarr;</a>
                 </div>
+                <div class="topic-card">
+                    <i class="fas fa-heartbeat"></i>
+                    <h3>Digital Wellness</h3>
+                    <p>Tips for screen time management, digital detoxes, and reducing the psychological impact of tech.
+                    </p>
+                    <a href="#" class="cta-link">View Guides &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                <button type="submit" class="btn btn-secondary">Subscribe for Free</button>
+    <section class="community-box" id="newsletter">
+        <div class="container">
+            <h2>Join Our Private Community</h2>
+            <p>Get exclusive privacy tips, weekly news digests, and advanced guides delivered straight to your inbox. No
+                tracking, ever.</p>
+            <form action="submit-form-endpoint.php" method="POST" id="newsletter-form">
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                </div>
+                <button type="submit" class="btn btn-primary cta-button">Subscribe Now</button>
             </form>
         </div>
     </section>
+
 
     <section class="about-us" id="about">
         <div class="container">
             <h2>Our Mission</h2>
             <div class="mission-content">
-                <p>We are a dedicated team of digital rights advocates, security experts, and ethical hackers committed
-                    to
-                    making digital privacy accessible to everyone. In an era where data is the new oil, we believe in
-                    empowering individuals with the knowledge and tools to protect their most valuable asset: their
-                    identity.</p>
-                <p>Our guides are thoroughly researched, frequently updated, and completely free. We focus on
-                    open-source
-                    software, proven security practices, and practical, everyday solutions for online anonymity.</p>
+                <p>We believe digital freedom is a fundamental human right. In an age where every click, search, and
+                    purchase is logged, our mission is to empower individuals to take back control.</p>
+                <p>NoIdentity.Space is a resource for learning and applying privacy-first technology and practices. We
+                    don't sell products; we sell knowledge. Our guides are honest, our recommendations are unbiased, and
+                    our goal is simple: to help you disappear from the trackers.</p>
+                <a href="#contact" class="btn btn-primary">Contact Us</a>
             </div>
         </div>
     </section>
 
-    <footer>
-        <div class="footer-content container">
-            <div class="footer-section footer-about">
-                <a href="#" class="logo">no<span>identity</span>.space</a>
-                <p>Your comprehensive guide to digital privacy, online anonymity, and digital wellness. We provide
-                    honest
-                    guides,
-                    and honest reviews.</p>
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-section">
+                <a href="index.html" class="logo">no<span>identity</span>.space</a>
+                <p class="tagline">Protecting your digital freedom.</p>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
@@ -203,7 +197,6 @@
         </div>
     </footer>
 
-    <!-- This is the ONLY script link required, and it MUST use type="module" -->
 
 </body>
 
