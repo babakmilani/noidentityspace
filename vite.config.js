@@ -8,9 +8,7 @@ function getArticleEntries(dir) {
     const files = readdirSync(dir).filter(file => file.endsWith('.html'));
 
     for (const file of files) {
-        // Key example: 'articles/how-to-browse-the-internet-anonymously'
         const key = `articles/${file.replace('.html', '')}`;
-        // Value example: '/path/to/project/articles/how-to-browse-the-internet-anonymously.html'
         entries[key] = resolve(__dirname, dir, file);
     }
     return entries;
@@ -21,11 +19,12 @@ const articleEntries = getArticleEntries('articles');
 
 export default defineConfig(({ command }) => {
     const isBuild = command === 'build';
-    const repositoryName = 'noidentityspace'; // <<< CHANGE THIS to your actual GitHub repository name
 
+    // Since you're using a custom domain (www.noidentity.space),
+    // the base path should be '/' not '/noidentityspace/'
     return {
-        // Set the base path for deployment (important for GitHub Pages subfolder hosting)
-        base: isBuild ? `/${repositoryName}/` : '/',
+        // Set the base path for deployment
+        base: '/',
 
         // Configure multi-page entry points for Rollup
         build: {
@@ -35,9 +34,10 @@ export default defineConfig(({ command }) => {
                     // Standard top-level pages
                     main: resolve(__dirname, 'index.html'),
                     contact: resolve(__dirname, 'contact.html'),
+                    privacy: resolve(__dirname, 'privacy.html'),
+                    terms: resolve(__dirname, 'terms.html'),
                     // Add articles dynamically
                     ...articleEntries,
-                    // Add any other top-level HTML pages here (e.g., privacy: resolve(__dirname, 'privacy.html'))
                 },
             },
         },

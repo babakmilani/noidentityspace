@@ -10,8 +10,6 @@
     <meta name="keywords" content="digital privacy, online anonymity, VPN, encryption, digital detox, data protection">
     <title>NoIdentity.Space - Reclaim Your Digital Freedom</title>
 
-    <link rel="stylesheet" href="styles.css">
-
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2379517169183719"
         crossorigin="anonymous"></script>
 
@@ -26,7 +24,7 @@
             <ul class="nav-links" id="navLinks">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#topics">Topics</a></li>
-                <li><a href="#articles">Articles</a></li>
+                <li><a href="articles.html">Articles</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
                 <li><a href="privacy.html">Privacy Policy</a></li>
@@ -50,6 +48,17 @@
         <div class="container">
             <h2>Featured Privacy & Security Articles</h2>
             <div class="article-grid">
+
+                <a href="articles/freeze-your-credit.html" class="article-card">
+                    <img src="https://placehold.co/600x400/ef4444/ffffff?text=Credit+Freeze" alt="Credit Freeze Guide"
+                        loading="lazy">
+                    <div class="card-content">
+                        <h3>Credit Freezes: The Essential Step to Protect Against Identity Theft</h3>
+                        <p>A step-by-step guide to locking your credit reports with Equifax, Experian, and TransUnion
+                            for free.</p>
+                        <span>Digital Security</span>
+                    </div>
+                </a>
                 <a href="articles/complete-guide-to-vpns.html" class="article-card">
                     <img src="https://placehold.co/600x400/6366f1/ffffff?text=VPN+Guide" alt="VPN Guide" loading="lazy">
                     <div class="card-content">
@@ -92,6 +101,19 @@
                         <span>Digital Privacy</span>
                     </div>
                 </a>
+
+                <a href="articles/password-managers-ultimate-guide.html" class="article-card">
+                    <img src="https://placehold.co/600x400/ec4899/ffffff?text=Password+Managers"
+                        alt="Password Managers Guide" loading="lazy">
+                    <div class="card-content">
+                        <h3>Password Managers: The Ultimate Guide</h3>
+                        <p>Learn why password managers are essential and how to choose the best one for your security
+                            needs.</p>
+                        <span>Digital Security</span>
+                    </div>
+                </a>
+
+
             </div>
             <div class="view-all">
                 <a href="#topics" class="btn cta-button">Explore All Topics</a>
@@ -127,16 +149,19 @@
         </div>
     </section>
 
+    <!-- Replace the newsletter section in index.html with this -->
     <section class="community-box" id="newsletter">
         <div class="container">
             <h2>Join Our Private Community</h2>
             <p>Get exclusive privacy tips, weekly news digests, and advanced guides delivered straight to your inbox. No
                 tracking, ever.</p>
-            <form action="submit-form-endpoint.php" method="POST" id="newsletter-form">
+            <!-- FIXED: Removed action attribute, changed ID to newsletterForm, added button ID -->
+            <form id="newsletterForm">
                 <div class="form-group">
-                    <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                    <input type="email" id="newsletter-email" name="email" placeholder="Enter your email address"
+                        required>
                 </div>
-                <button type="submit" class="btn btn-primary cta-button">Subscribe Now</button>
+                <button type="submit" class="btn btn-primary cta-button" id="newsletterSubmitBtn">Subscribe Now</button>
             </form>
         </div>
     </section>
@@ -151,7 +176,7 @@
                 <p>NoIdentity.Space is a resource for learning and applying privacy-first technology and practices. We
                     don't sell products; we sell knowledge. Our guides are honest, our recommendations are unbiased, and
                     our goal is simple: to help you disappear from the trackers.</p>
-                <a href="#contact" class="btn btn-primary">Contact Us</a>
+                <a href="contact.html" class="btn btn-primary">Contact Us</a>
             </div>
         </div>
     </section>
@@ -159,7 +184,7 @@
     <footer class="main-footer">
         <div class="container footer-grid">
             <div class="footer-section">
-                <a href="index.html" class="logo">no<span>identity</span>.space</a>
+                <a href="#home" class="logo">no<span>identity</span>.space</a>
                 <p class="tagline">Protecting your digital freedom.</p>
             </div>
             <div class="footer-section">
@@ -167,25 +192,25 @@
                 <ul class="footer-links">
                     <li><a href="privacy.html">Privacy Policy</a></li>
                     <li><a href="terms.html">Terms of Service</a></li>
-                    <li><a href="#">Cookie Policy</a></li>
-                    <li><a href="#">Disclaimer</a></li>
+                    <li><a href="cookies-policy.html">Cookie Policy</a></li>
+                    <li><a href="disclaimer.html">Disclaimer</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h3>Categories</h3>
                 <ul class="footer-links">
-                    <li><a href="#">Digital Privacy</a></li>
-                    <li><a href="#">Digital Wellness</a></li>
-                    <li><a href="#">Anonymous Living</a></li>
-                    <li><a href="#">Privacy News</a></li>
+                    <li><a href="#topics">Digital Privacy</a></li>
+                    <li><a href="#topics">Digital Wellness</a></li>
+                    <li><a href="#topics">Anonymous Living</a></li>
+                    <li><a href="#articles">Privacy News</a></li>
                 </ul>
             </div>
             <div class="footer-section" id="contact">
                 <h3>Connect</h3>
                 <ul class="footer-links">
                     <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="#">Submit a Tip</a></li>
-                    <li><a href="#">Advertise</a></li>
+                    <li><a href="#newsletter">Submit a Tip</a></li>
+                    <li><a href="contact.html">Advertise</a></li>
                     <li><a href="#">RSS Feed</a></li>
                 </ul>
             </div>

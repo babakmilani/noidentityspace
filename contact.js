@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        // Configuration check using the imported URL
-        if (APPS_SCRIPT_URL === "YOUR_APPS_SCRIPT_WEB_APP_URL" || APPS_SCRIPT_URL.length < 50) {
+        // Configuration check - verify it's a valid Google Apps Script URL
+        if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "YOUR_APPS_SCRIPT_URL_HERE" || !APPS_SCRIPT_URL.includes('script.google.com')) {
             handleError("Configuration Error: The Apps Script URL has not been set correctly in config.js.");
             return;
         }
@@ -29,42 +29,51 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.textContent = 'Sending...';
 
         const formData = new FormData(form);
+        // Explicitly set the formType to differentiate submissions in the Apps Script
+        formData.append('formType', 'contact');
+
         // Convert FormData to URLSearchParams for Apps Script compatibility (key=value&key2=value2)
         const params = new URLSearchParams(formData);
 
         // --- Fetch Request to Apps Script ---
-        fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            body: params
-        })
-            .then(response => {
-                // Check for successful HTTP response (200-299 status code)
-                if (response.ok) {
-                    return response.text();
-                } else {
-                    // Throw an error for non-200 HTTP statuses
-                    throw new Error(`Server error: ${response.status} (${response.statusText})`);
-                }
+        const MAX_RETRIES = 3;
+        let retries = 0;
+
+        const attemptSubmission = () => {
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: params
             })
-            .then(text => {
-                // Check for the 'success' string returned by the Apps Script's doPost function
-                if (text.includes("success")) {
-                    handleSuccess();
-                } else {
-                    // Handle errors returned specifically by the Apps Script (e.g., missing fields)
-                    throw new Error(`Form submission failed. Apps Script response: ${text}`);
-                }
-            })
-            .catch(error => {
-                console.error('Submission Error:', error);
-                // Display a user-friendly error message
-                handleError("We couldn't send your message. Please verify your internet connection and try again.");
-            })
-            .finally(() => {
-                // --- End Submission State ---
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Send Message';
-            });
+                .then(response => response.text())
+                .then(text => {
+                    if (text === 'success') {
+                        handleSuccess();
+                    } else {
+                        // Handle errors returned specifically by the Apps Script (e.g., missing fields)
+                        throw new Error(`Form submission failed. Apps Script response: ${text}`);
+                    }
+                })
+                .catch(error => {
+                    if (retries < MAX_RETRIES) {
+                        retries++;
+                        const delay = Math.pow(2, retries) * 1000; // Exponential delay (2s, 4s, 8s)
+                        setTimeout(attemptSubmission, delay);
+                    } else {
+                        // Max retries reached, show error
+                        console.error('Submission Error:', error);
+                        handleError("We couldn't send your message. Please verify your internet connection and try again.");
+                    }
+                })
+                .finally(() => {
+                    // --- End Submission State ---
+                    if (retries >= MAX_RETRIES) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Send Message';
+                    }
+                });
+        };
+
+        attemptSubmission();
     });
 
     /**
@@ -74,6 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
         responseMessage.className = 'message-box message-success';
         responseMessage.innerHTML = '<strong>Success!</strong> Your message has been sent. We will get back to you soon.';
         responseMessage.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
         form.reset();
     }
 
@@ -85,5 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         responseMessage.className = 'message-box message-error';
         responseMessage.innerHTML = `<strong>Error!</strong> ${message}`;
         responseMessage.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
     }
 });
