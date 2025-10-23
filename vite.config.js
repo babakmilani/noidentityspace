@@ -33,6 +33,8 @@ export default defineConfig(({ command }) => {
                 input: {
                     // Standard top-level pages
                     main: resolve(__dirname, 'index.html'),
+                    // 👇 CRITICAL FIX: Add articles.html as a core entry point
+                    articles: resolve(__dirname, 'articles.html'),
                     contact: resolve(__dirname, 'contact.html'),
                     privacy: resolve(__dirname, 'privacy.html'),
                     terms: resolve(__dirname, 'terms.html'),
