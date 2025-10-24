@@ -118,21 +118,26 @@ function handleNewsletterSubmission(e) {
 
         fetch(APPS_SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors',
-            body: params,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
+            body: params
         })
-            .then(() => {
-                // Success is assumed due to 'no-cors' mode. Apps Script logic handles the actual data check.
-                handleSubmissionSuccess(communityBox);
+            .then(response => response.text())
+            .then(text => {
+                if (text.trim() === 'success') {
+                    handleSubmissionSuccess(communityBox);
+                } else {
+                    throw new Error(`Newsletter submission failed. Apps Script response: ${text}`);
+                }
             })
             .catch(error => {
                 retries++;
-                console.warn(`Submission failed (Attempt ${retries}/${MAX_RETRIES}). Retrying in 2 seconds...`, error);
-                setTimeout(attemptSubmission, 2000);
+                console.warn(`Newsletter submission failed (Attempt ${retries}/${MAX_RETRIES})`, error);
+                if (retries < MAX_RETRIES) {
+                    setTimeout(attemptSubmission, 2000);
+                } else {
+                    handleSubmissionError(communityBox, "We couldn't subscribe you. Please try again later.");
+                }
             });
+
     };
 
     attemptSubmission();
