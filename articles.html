@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="styles.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2379517169183719"
         crossorigin="anonymous"></script>
-
 </head>
 
 <body>
@@ -33,107 +32,138 @@
         </nav>
     </header>
 
-    <main class="content-wrapper">
-        <section id="articles-hero" class="hero-section">
-            <h1 class="hero-title">Our Library of Knowledge</h1>
-            <p class="hero-subtitle">Deep dives into digital privacy, security, and anonymity protocols.</p>
-        </section>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Our Library of <span class="highlight">Knowledge</span></h1>
+        <p class="subtitle">Deep dives into digital privacy, security, and anonymity protocols.</p>
+    </section>
 
-        <section id="article-list" class="article-list-section">
+    <!-- Articles Section using existing styles -->
+    <section class="featured-articles">
+        <div class="container">
             <h2>Latest Articles</h2>
-            <div class="article-list-grid">
+            <div class="article-grid">
 
-                <!-- NEW ARTICLE: Recruiter Scam Warning -->
-                <div class="article-card">
-                    <a href="articles/recruiter-scam-1099-warning.html">
-                        <!-- Placeholder image URL for the card visual -->
-                        <div class="card-image"
-                            style="background-image: url('assets/images/recruiter-scam-hero.webp');"></div>
-                        <div class="card-content">
-                            <p class="card-category">DIGITAL SCAMS</p>
-                            <h3 class="card-title">Recruiter Scam Warning: They Asked for My 1099 Tax Documents</h3>
-                            <p class="card-excerpt">My personal experience with a sophisticated recruiter scam involving
-                                Rose International and Meta. The critical red flag: they asked for my 1099 tax
-                                documents.</p>
-                            <p class="card-date">October 10th, 2025</p>
-                        </div>
-                    </a>
-                </div>
-                <!-- END NEW ARTICLE -->
+                <!-- Recruiter Scam Warning -->
+                <a href="articles/recruiter-scam-1099-warning.html" class="article-card">
+                    <img src="assets/images/recruiter-scam-hero.webp" alt="Recruiter Scam Warning" loading="lazy">
+                    <div class="card-content">
+                        <h3>Recruiter Scam Warning: They Asked for My 1099 Tax Documents</h3>
+                        <p>My personal experience with a sophisticated recruiter scam involving Rose International and
+                            Meta. The critical red flag: they asked for my 1099 tax documents.</p>
+                        <span>Digital Scams</span>
+                    </div>
+                </a>
 
-                <div class="article-card">
-                    <a href="articles/Digital-Inheritance.html">
-                        <div class="card-image" style="background-image: url('assets/images/digital-will-hero.webp');">
-                        </div>
-                        <div class="card-content">
-                            <p class="card-category">ANONYMOUS LIVING</p>
-                            <h3 class="card-title">Digital Inheritance: How to Plan for Your Accounts and Data After
-                                You're Gone</h3>
-                            <p class="card-excerpt">A comprehensive guide on creating a digital will, setting up legacy
-                                contacts, and managing all digital assets post-mortem.</p>
-                            <p class="card-date">September 15th, 2025</p>
-                        </div>
-                    </a>
-                </div>
+                <!-- Digital Inheritance -->
+                <a href="articles/Digital-Inheritance.html" class="article-card">
+                    <img src="assets/images/digital-will-hero.webp" alt="Digital Inheritance" loading="lazy">
+                    <div class="card-content">
+                        <h3>Digital Inheritance: How to Plan for Your Accounts and Data After You're Gone</h3>
+                        <p>A comprehensive guide on creating a digital will, setting up legacy contacts, and managing
+                            all digital assets post-mortem.</p>
+                        <span>Anonymous Living</span>
+                    </div>
+                </a>
 
-                <div class="article-card">
-                    <a href="articles/best-privacy-apps.html">
-                        <div class="card-image" style="background-image: url('assets/images/apps-hero.webp');"></div>
-                        <div class="card-content">
-                            <p class="card-category">DIGITAL PRIVACY</p>
-                            <h3 class="card-title">The Best Privacy-Focused Apps of 2025: Essential Tools for Digital
-                                Security</h3>
-                            <p class="card-excerpt">Discover the must-have privacy-focused apps for 2025 across
-                                categories like messaging, browsers, search engines, and email to protect your personal
-                                data.</p>
-                            <p class="card-date">September 1st, 2025</p>
-                        </div>
-                    </a>
-                </div>
+                <!-- Best Privacy Apps -->
+                <a href="articles/best-privacy-apps.html" class="article-card">
+                    <img src="assets/images/apps-hero.webp" alt="Best Privacy Apps" loading="lazy">
+                    <div class="card-content">
+                        <h3>The Best Privacy-Focused Apps of 2025: Essential Tools for Digital Security</h3>
+                        <p>Discover the must-have privacy-focused apps for 2025 across categories like messaging,
+                            browsers, search engines, and email to protect your personal data.</p>
+                        <span>Digital Privacy</span>
+                    </div>
+                </a>
 
-                <div class="article-card">
-                    <a href="articles/complete-guide-to-vpns.html">
-                        <div class="card-image" style="background-image: url('assets/images/vpn-hero.webp');"></div>
-                        <div class="card-content">
-                            <p class="card-category">DIGITAL PRIVACY</p>
-                            <h3 class="card-title">Complete Guide to VPNs in 2025: Everything You Need to Know</h3>
-                            <p class="card-excerpt">Learn everything about VPNs in 2025 - how they work, why you need
-                                one, and how to choose the best VPN for your privacy and security needs.</p>
-                            <p class="card-date">August 20th, 2025</p>
-                        </div>
-                    </a>
-                </div>
+                <!-- Complete Guide to VPNs -->
+                <a href="articles/complete-guide-to-vpns.html" class="article-card">
+                    <img src="assets/images/vpn-hero.webp" alt="VPN Guide" loading="lazy">
+                    <div class="card-content">
+                        <h3>Complete Guide to VPNs in 2025: Everything You Need to Know</h3>
+                        <p>Learn everything about VPNs in 2025 - how they work, why you need one, and how to choose the
+                            best VPN for your privacy and security needs.</p>
+                        <span>Digital Privacy</span>
+                    </div>
+                </a>
 
-                <div class="article-card">
-                    <a href="articles/ecommerce-fraud-risk.html">
-                        <div class="card-image" style="background-image: url('assets/images/fraud-hero.webp');"></div>
-                        <div class="card-content">
-                            <p class="card-category">DIGITAL SCAMS</p>
-                            <h3 class="card-title">Top E-commerce Fraud Risks and How to Counter Them</h3>
-                            <p class="card-excerpt">This guide details the five biggest e-commerce threats for 2025 and
-                                outlines the best practices for multilayered defense systems.</p>
-                            <p class="card-date">August 10th, 2025</p>
-                        </div>
-                    </a>
-                </div>
+                <!-- E-commerce Fraud Risk -->
+                <a href="articles/ecommerce-fraud-risk.html" class="article-card">
+                    <img src="assets/images/fraud-hero.webp" alt="E-commerce Fraud" loading="lazy">
+                    <div class="card-content">
+                        <h3>Top E-commerce Fraud Risks and How to Counter Them</h3>
+                        <p>This guide details the five biggest e-commerce threats for 2025 and outlines the best
+                            practices for multilayered defense systems.</p>
+                        <span>Digital Scams</span>
+                    </div>
+                </a>
+
+                <!-- Credit Freeze -->
+                <a href="articles/freeze-your-credit.html" class="article-card">
+                    <img src="https://placehold.co/600x400/ef4444/ffffff?text=Credit+Freeze" alt="Credit Freeze Guide"
+                        loading="lazy">
+                    <div class="card-content">
+                        <h3>Credit Freezes: The Essential Step to Protect Against Identity Theft</h3>
+                        <p>A step-by-step guide to locking your credit reports with Equifax, Experian, and TransUnion
+                            for free.</p>
+                        <span>Digital Security</span>
+                    </div>
+                </a>
+
+                <!-- Anonymous Browsing -->
+                <a href="articles/how-to-browse-the-internet-anonymously.html" class="article-card">
+                    <img src="https://placehold.co/600x400/0ea5e9/ffffff?text=Anonymous+Browsing"
+                        alt="Anonymous Browsing" loading="lazy">
+                    <div class="card-content">
+                        <h3>How to Browse the Internet Anonymously</h3>
+                        <p>Practical steps and tools to minimize your digital footprint and browse without being
+                            tracked.</p>
+                        <span>Online Anonymity</span>
+                    </div>
+                </a>
+
+                <!-- Digital Detox -->
+                <a href="articles/the-30-day-digital-detox-challenge.html" class="article-card">
+                    <img src="https://placehold.co/600x400/4f46e5/ffffff?text=Digital+Detox" alt="Digital Detox"
+                        loading="lazy">
+                    <div class="card-content">
+                        <h3>The 30-Day Digital Detox Challenge</h3>
+                        <p>Reclaim your focus and mental clarity by successfully reducing screen time and social media
+                            use.</p>
+                        <span>Digital Wellness</span>
+                    </div>
+                </a>
+
+                <!-- Password Managers -->
+                <a href="articles/password-managers-ultimate-guide.html" class="article-card">
+                    <img src="https://placehold.co/600x400/ec4899/ffffff?text=Password+Managers"
+                        alt="Password Managers Guide" loading="lazy">
+                    <div class="card-content">
+                        <h3>Password Managers: The Ultimate Guide</h3>
+                        <p>Learn why password managers are essential and how to choose the best one for your security
+                            needs.</p>
+                        <span>Digital Security</span>
+                    </div>
+                </a>
 
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
     <footer class="main-footer">
-        <div class="footer-grid">
-            <div class="footer-section footer-about">
-                <a href="index.html" class="logo footer-logo">no<span>identity</span>.space</a>
-                <p>Dedicated to helping you navigate the digital world safely, privately, and anonymously.</p>
+        <div class="container footer-grid">
+            <div class="footer-section">
+                <a href="index.html" class="logo">no<span>identity</span>.space</a>
+                <p class="tagline">Protecting your digital freedom.</p>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
                 <ul class="footer-links">
                     <li><a href="privacy.html">Privacy Policy</a></li>
                     <li><a href="terms.html">Terms of Service</a></li>
-                    <li><a href="#">Cookie Policy</a></li>
-                    <li><a href="#">Disclaimer</a></li>
+                    <li><a href="cookies-policy.html">Cookie Policy</a></li>
+                    <li><a href="disclaimer.html">Disclaimer</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -149,7 +179,7 @@
                 <h3>Connect</h3>
                 <ul class="footer-links">
                     <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="#newsletter">Submit a Tip</a></li>
+                    <li><a href="index.html#newsletter">Submit a Tip</a></li>
                     <li><a href="contact.html">Advertise</a></li>
                     <li><a href="#">RSS Feed</a></li>
                 </ul>
