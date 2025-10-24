@@ -78,8 +78,7 @@ function handleNewsletterSubmission(e) {
 
     const form = e.target;
     const submitBtn = document.getElementById('newsletterSubmitBtn');
-    // Assuming the form is contained in an element like .community-box on index.html
-    // New (Fixed) line:
+    // Find the closest container for error/success messages
     const communityBox = form.closest('.community-box') || form.closest('.sidebar-section') || form.parentElement;
 
     if (!submitBtn) {
@@ -95,11 +94,13 @@ function handleNewsletterSubmission(e) {
     }
 
     // --- Start Submission State ---
+    // Hide previous response messages
+    communityBox.querySelectorAll('.response-message').forEach(el => el.style.display = 'none');
+
+    // Store original text
     const originalText = submitBtn.textContent;
     submitBtn.disabled = true;
     submitBtn.textContent = 'Subscribing...';
-    // Hide previous response messages
-    communityBox.querySelectorAll('.response-message').forEach(el => el.style.display = 'none');
 
 
     const formData = new FormData(form);
@@ -107,37 +108,44 @@ function handleNewsletterSubmission(e) {
     formData.append('formType', 'newsletter');
 
     // CONVERT to URLSearchParams, matching the successful method in contact.js
-    const params = new URLSearchParams(formData).toString();
+    const params = new URLSearchParams(formData);
 
     let retries = 0;
-    const attemptSubmission = () => {
-        if (retries >= MAX_RETRIES) {
-            handleSubmissionError(communityBox, "The server did not respond. Please try again later.");
-            return;
-        }
 
+    // Define the submission attempt function with retry logic
+    const attemptSubmission = () => {
         fetch(APPS_SCRIPT_URL, {
             method: 'POST',
-            body: params
+            body: params, // Use the converted URLSearchParams object here
         })
             .then(response => response.text())
             .then(text => {
-                if (text.trim() === 'success') {
+                if (text === 'success') {
                     handleSubmissionSuccess(communityBox);
                 } else {
-                    throw new Error(`Newsletter submission failed. Apps Script response: ${text}`);
+                    // Handle errors returned specifically by the Apps Script
+                    throw new Error(`Form submission failed. Apps Script response: ${text}`);
                 }
             })
             .catch(error => {
-                retries++;
-                console.warn(`Newsletter submission failed (Attempt ${retries}/${MAX_RETRIES})`, error);
                 if (retries < MAX_RETRIES) {
-                    setTimeout(attemptSubmission, 2000);
+                    retries++;
+                    const delay = Math.pow(2, retries) * 1000; // Exponential delay (2s, 4s, 8s)
+                    console.warn(`⚠️ Submission failed. Retrying in ${delay / 1000}s... (Attempt ${retries}/${MAX_RETRIES})`);
+                    setTimeout(attemptSubmission, delay);
                 } else {
-                    handleSubmissionError(communityBox, "We couldn't subscribe you. Please try again later.");
+                    // Max retries reached, show error
+                    console.error('Submission Error:', error);
+                    handleSubmissionError(communityBox, "We couldn't subscribe your email. Please verify your internet connection and try again.");
+                }
+            })
+            .finally(() => {
+                // Restore button state on final failure (redundant with handleSubmissionError, but safer)
+                if (retries >= MAX_RETRIES) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
                 }
             });
-
     };
 
     attemptSubmission();
