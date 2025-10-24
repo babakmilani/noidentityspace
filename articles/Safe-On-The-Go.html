@@ -112,7 +112,8 @@
                 unexpectedly, the kill switch immediately cuts off your device's internet access, preventing any data
                 from leaking unencrypted onto the public network.</p>
             <p><strong>Verify Protocol:</strong> Use modern, secure protocols like <strong>WireGuard</strong> or
-                <strong>OpenVPN</strong> over older, less secure options.</p>
+                <strong>OpenVPN</strong> over older, less secure options.
+            </p>
             <p><strong>Check for DNS Leaks:</strong> Before relying on a VPN, run a DNS leak test to ensure your DNS
                 queries are not being exposed.</p>
 
@@ -204,7 +205,8 @@
             <p>Laws vary dramatically by jurisdiction, but generally, border searches are viewed as
                 <strong>"non-suspicion" searches</strong>, meaning agents do not need a warrant or reasonable suspicion
                 to conduct a basic inspection. This inspection can involve asking you to unlock your devices. Refusal
-                can lead to device seizure, a denied entry, or an immediate return flight.</p>
+                can lead to device seizure, a denied entry, or an immediate return flight.
+            </p>
 
             <h3>4.2 The "Wipe and Restore" Strategy (Digital Minimalism)</h3>
             <p>The single most effective defense against border searches is <strong>Data Minimization</strong>. If the
@@ -368,11 +370,14 @@
                 style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white;">
                 <h3 style="color: white;">Stay Updated</h3>
                 <p style="font-size: 0.9rem; margin-bottom: 1rem;">Get weekly privacy tips delivered to your inbox.</p>
-                <form id="newsletterForm">
-                    <input type="email" id="newsletter-email" name="email" placeholder="Your email" required
+                <form id="sidebarNewsletterForm" class="sidebar-newsletter-form">
+                    <input type="email" name="email" placeholder="Your email" required
                         style="width: 100%; padding: 0.75rem; border: none; border-radius: 6px; margin-bottom: 0.5rem;">
-                    <button type="submit" id="newsletterSubmitBtn"
-                        style="width: 100%; padding: 0.75rem; background: white; color: var(--primary); border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Subscribe</button>
+                    <button type="submit"
+                        style="width: 100%; padding: 0.75rem; background: white; color: var(--primary); border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                        Subscribe
+                    </button>
+                    <!-- Response message will be inserted here -->
                 </form>
             </div>
         </aside>

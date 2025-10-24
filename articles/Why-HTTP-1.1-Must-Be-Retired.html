@@ -109,7 +109,8 @@
             <ul>
                 <li>**HTTP/2 (2015):** Does not use <code>Content-Length</code> or
                     <code>Transfer-Encoding: chunked</code>. It frames all requests into binary data streams, making the
-                    boundaries crystal clear and removing the potential for misinterpretation.</li>
+                    boundaries crystal clear and removing the potential for misinterpretation.
+                </li>
                 <li>**HTTP/3 (2022):** Builds on HTTP/2's framing model and runs over **QUIC**, which natively handles
                     reliable delivery and stream boundaries at the transport layer, further isolating requests from each
                     other.</li>
@@ -175,11 +176,14 @@
                 style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white;">
                 <h3 style="color: white;">Stay Updated</h3>
                 <p style="font-size: 0.9rem; margin-bottom: 1rem;">Get weekly privacy tips delivered to your inbox.</p>
-                <form id="newsletterForm">
-                    <input type="email" id="newsletter-email" name="email" placeholder="Your email" required
+                <form id="sidebarNewsletterForm" class="sidebar-newsletter-form">
+                    <input type="email" name="email" placeholder="Your email" required
                         style="width: 100%; padding: 0.75rem; border: none; border-radius: 6px; margin-bottom: 0.5rem;">
-                    <button type="submit" id="newsletterSubmitBtn"
-                        style="width: 100%; padding: 0.75rem; background: white; color: var(--primary); border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Subscribe</button>
+                    <button type="submit"
+                        style="width: 100%; padding: 0.75rem; background: white; color: var(--primary); border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                        Subscribe
+                    </button>
+                    <!-- Response message will be inserted here -->
                 </form>
             </div>
         </aside>
