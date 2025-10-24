@@ -79,6 +79,7 @@ function handleNewsletterSubmission(e) {
     const form = e.target;
     const submitBtn = document.getElementById('newsletterSubmitBtn');
     // Assuming the form is contained in an element like .community-box on index.html
+    // New (Fixed) line:
     const communityBox = form.closest('.community-box') || form.closest('.sidebar-section') || form.parentElement;
 
     if (!submitBtn) {

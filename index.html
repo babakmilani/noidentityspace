@@ -149,16 +149,16 @@
         </div>
     </section>
 
-    <!-- Replace the newsletter section in index.html with this -->
+
     <section class="community-box" id="newsletter">
         <div class="container">
             <h2>Join Our Private Community</h2>
             <p>Get exclusive privacy tips, weekly news digests, and advanced guides delivered straight to your inbox. No
                 tracking, ever.</p>
-            <!-- FIXED: Removed action attribute, changed ID to newsletterForm, added button ID -->
             <form id="newsletterForm">
-                <input type="email" name="email" id="newsletter-email" placeholder="Your Email Address" required>
-
+                <div class="form-group">
+                    <input type="email" name="email" id="newsletter-email" placeholder="Your Email Address" required>
+                </div>
                 <button type="submit" class="submit-btn" id="newsletterSubmitBtn">Subscribe</button>
 
                 <p class="response-message" style="display:none;"></p>
