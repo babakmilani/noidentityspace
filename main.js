@@ -118,14 +118,21 @@ function showError(messageElement, submitBtn, message) {
 }
 
 /**
- * Sets up the newsletter form listener.
+ * Sets up newsletter form listeners for both main and sidebar forms.
  */
 function setupNewsletterForm() {
+    // Main newsletter form (on index.html)
     const newsletterForm = document.getElementById('newsletterForm');
-
     if (newsletterForm) {
         newsletterForm.addEventListener('submit', handleNewsletterSubmission);
-        console.log('Newsletter form listener attached');
+        console.log('Main newsletter form listener attached');
+    }
+
+    // Sidebar newsletter form (on article pages)
+    const sidebarNewsletterForm = document.getElementById('sidebarNewsletterForm');
+    if (sidebarNewsletterForm) {
+        sidebarNewsletterForm.addEventListener('submit', handleNewsletterSubmission);
+        console.log('Sidebar newsletter form listener attached');
     }
 }
 
@@ -152,3 +159,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Setup the newsletter form
     setupNewsletterForm();
 });
+
