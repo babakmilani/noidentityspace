@@ -1,7 +1,6 @@
 // main.js - Central JavaScript entry point for general site functionality.
 
 // Import necessary modules
-import './styles.css';
 import { APPS_SCRIPT_URL } from './config.js';
 
 // Max retries for fetch operations
@@ -19,137 +18,76 @@ window.toggleMenu = function () {
     }
 }
 
-// --- Submission Utilities ---
-
-/**
- * Utility function to handle submission errors and update the UI.
- */
-function handleSubmissionError(form, message) {
-    let responseMessage = form.querySelector('.message-box');
-
-    if (!responseMessage) {
-        responseMessage = document.createElement('div');
-        responseMessage.className = 'message-box';
-        form.appendChild(responseMessage);
-    }
-
-    responseMessage.className = 'message-box message-error';
-    responseMessage.innerHTML = `<strong>Error!</strong> ${message}`;
-    responseMessage.style.display = 'block';
-
-    const submitBtn = document.getElementById('newsletterSubmitBtn');
-    if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Subscribe';
-    }
-}
-
-/**
- * Utility function to handle successful submission and update the UI.
- */
-function handleSubmissionSuccess(form) {
-    let responseMessage = form.querySelector('.message-box');
-
-    if (!responseMessage) {
-        responseMessage = document.createElement('div');
-        responseMessage.className = 'message-box';
-        form.appendChild(responseMessage);
-    }
-
-    responseMessage.className = 'message-box message-success';
-    responseMessage.innerHTML = '<strong>Success!</strong> You have subscribed to our newsletter. Check your email to confirm!';
-    responseMessage.style.display = 'block';
-
-    const submitBtn = document.getElementById('newsletterSubmitBtn');
-    if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Subscribe';
-    }
-
-    form.reset();
-}
+// --- Newsletter Form Handling ---
 
 /**
  * Handles the newsletter form submission using the Apps Script endpoint.
  */
 function handleNewsletterSubmission(e) {
     e.preventDefault();
-    console.log('📧 Newsletter form submitted!');
 
     const form = e.target;
-    const submitBtn = document.getElementById('newsletterSubmitBtn');
-    const responseMessage = form.querySelector('.response-message');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    // Get or create response message element
+    let responseMessage = form.querySelector('.message-box');
+    if (!responseMessage) {
+        responseMessage = document.createElement('div');
+        responseMessage.className = 'message-box';
+        form.appendChild(responseMessage);
+    }
 
     if (!submitBtn) {
-        console.error("❌ Newsletter submit button not found");
+        console.error("Newsletter submit button not found");
         return;
     }
 
     // Configuration check
-    if (!APPS_SCRIPT_URL || !APPS_SCRIPT_URL.includes('script.google.com')) {
-        console.error("❌ Apps Script URL not configured properly:", APPS_SCRIPT_URL);
-        handleSubmissionError(form, "Configuration Error: The Apps Script URL is not set correctly.");
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "YOUR_APPS_SCRIPT_URL_HERE" || !APPS_SCRIPT_URL.includes('script.google.com')) {
+        showError(responseMessage, submitBtn, "Configuration Error: The Apps Script URL has not been set correctly in config.js.");
         return;
     }
 
-    console.log('✅ Apps Script URL configured:', APPS_SCRIPT_URL);
-
     // --- Start Submission State ---
-    if (responseMessage) {
-        responseMessage.style.display = 'none';
-    }
-
+    responseMessage.style.display = 'none';
+    responseMessage.textContent = '';
     submitBtn.disabled = true;
     submitBtn.textContent = 'Subscribing...';
 
     const formData = new FormData(form);
-    // CRITICAL: Add formType parameter
+    // Add formType to differentiate from contact form
     formData.append('formType', 'newsletter');
 
-    // Convert to URLSearchParams for Apps Script compatibility
+    // Convert FormData to URLSearchParams for Apps Script compatibility
     const params = new URLSearchParams(formData);
 
-    console.log('📤 Sending data:', Object.fromEntries(params));
-
+    // --- Fetch Request to Apps Script ---
     let retries = 0;
 
     const attemptSubmission = () => {
-        console.log(`🔄 Attempt ${retries + 1}/${MAX_RETRIES + 1}`);
-
         fetch(APPS_SCRIPT_URL, {
             method: 'POST',
             body: params
         })
-            .then(response => {
-                console.log('📥 Response received:', response);
-                return response.text();
-            })
+            .then(response => response.text())
             .then(text => {
-                console.log('📄 Response text:', text);
-
                 if (text === 'success') {
-                    console.log('✅ Success!');
-                    handleSubmissionSuccess(form);
+                    showSuccess(responseMessage, submitBtn);
+                    form.reset();
                 } else {
-                    let errorMessage = "Subscription failed. Please try again.";
-                    if (text.includes("error:")) {
-                        errorMessage = text.replace("error: ", "");
-                    }
-                    console.error('❌ Error response:', errorMessage);
-                    throw new Error(errorMessage);
+                    // Handle errors returned by the Apps Script
+                    throw new Error(`Subscription failed. Apps Script response: ${text}`);
                 }
             })
             .catch(error => {
-                console.error('❌ Fetch error:', error);
-
                 if (retries < MAX_RETRIES) {
                     retries++;
-                    const delay = Math.pow(2, retries) * 1000;
-                    console.log(`⏳ Retrying in ${delay / 1000} seconds...`);
+                    const delay = Math.pow(2, retries) * 1000; // Exponential delay
                     setTimeout(attemptSubmission, delay);
                 } else {
-                    console.error('❌ Max retries reached. Submission failed.');
-                    handleSubmissionError(form, "We couldn't subscribe your email. Please check your connection and try again.");
+                    // Max retries reached, show error
+                    console.error('Submission Error:', error);
+                    showError(responseMessage, submitBtn, "We couldn't subscribe your email. Please verify your internet connection and try again.");
                 }
             });
     };
@@ -158,25 +96,36 @@ function handleNewsletterSubmission(e) {
 }
 
 /**
+ * Shows success message
+ */
+function showSuccess(messageElement, submitBtn) {
+    messageElement.className = 'message-box message-success';
+    messageElement.innerHTML = '<strong>Success!</strong> You have been subscribed to our newsletter!';
+    messageElement.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Subscribe';
+}
+
+/**
+ * Shows error message
+ */
+function showError(messageElement, submitBtn, message) {
+    messageElement.className = 'message-box message-error';
+    messageElement.innerHTML = `<strong>Error!</strong> ${message}`;
+    messageElement.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Subscribe';
+}
+
+/**
  * Sets up the newsletter form listener.
  */
-function setupNewsletterFormListener() {
+function setupNewsletterForm() {
     const newsletterForm = document.getElementById('newsletterForm');
 
-    console.log('🔍 Looking for newsletter form...');
-
     if (newsletterForm) {
-        console.log('✅ Newsletter form found!');
-
-        // Remove any existing listeners by cloning and replacing the form
-        const newForm = newsletterForm.cloneNode(true);
-        newsletterForm.parentNode.replaceChild(newForm, newsletterForm);
-
-        // Add the submit event listener
-        newForm.addEventListener('submit', handleNewsletterSubmission);
-        console.log('✅ Newsletter form listener attached successfully');
-    } else {
-        console.warn('⚠️ Newsletter form not found on this page');
+        newsletterForm.addEventListener('submit', handleNewsletterSubmission);
+        console.log('Newsletter form listener attached');
     }
 }
 
@@ -184,8 +133,6 @@ function setupNewsletterFormListener() {
  * Enables smooth scrolling and sets up form listeners.
  */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Page loaded, initializing...');
-
     // Setup smooth scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -202,6 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Setup the newsletter form listener
-    setupNewsletterFormListener();
+    // Setup the newsletter form
+    setupNewsletterForm();
 });
