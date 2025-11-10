@@ -14,7 +14,7 @@ const anthropic = new Anthropic({
 
 // CONFIG
 const CONFIG = {
-    model: "claude-3-sonnet-20250219",
+    model: "claude-3-sonnet-latest",
     maxTokens: 8000,
     categories: [
         "Digital Privacy",
