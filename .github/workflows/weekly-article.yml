@@ -1,0 +1,56 @@
+name: Weekly Article Generator
+
+on:
+  schedule:
+    # Runs every Monday at 8:00 AM EST (13:00 UTC)
+    - cron: '0 13 * * 1'
+  workflow_dispatch: # Allows manual trigger for testing
+
+permissions:
+  contents: write
+
+jobs:
+  generate-article:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm install @anthropic-ai/sdk
+          npm install cheerio
+
+      - name: Generate Article
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/generate-article.js
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "NoIdentity Article Bot"
+          git add articles/*.html
+          git add articles.html
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            ARTICLE_TITLE=$(cat .article-title.txt 2>/dev/null || echo "Weekly Article")
+            git commit -m "Add automated article: $ARTICLE_TITLE"
+            git push
+          fi
+
+      - name: Report Status
+        if: always()
+        run: |
+          if [ -f article-report.txt ]; then
+            cat article-report.txt
+          fi
