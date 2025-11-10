@@ -1,11 +1,24 @@
 // scripts/generate-article.js
-console.log("✅ generate-article.js started running...");
+// --- Debug start ---
+console.log("✅ Script started running...");
 
+// Top-level imports (must stay outside try)
 import Anthropic from '@anthropic-ai/sdk';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import * as cheerio from 'cheerio';
+
+console.log("✅ Imports loaded successfully");
+
+try {
+    // Everything inside your existing main code should go here
+    console.log("✅ Starting article generation logic...");
+
+    // (rest of your original script)
+} catch (err) {
+    console.error("❌ Script failed with error:", err);
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
