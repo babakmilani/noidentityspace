@@ -2,6 +2,7 @@
   "name": "noidentity-space",
   "version": "1.0.0",
   "description": "Digital privacy website built with Vite for fast deployment.",
+  "type": "module",
   "main": "index.html",
   "scripts": {
     "dev": "vite",
