@@ -1,4 +1,6 @@
 // scripts/generate-article.js
+console.log("✅ generate-article.js started running...");
+
 import Anthropic from '@anthropic-ai/sdk';
 import fs from 'fs';
 import path from 'path';
