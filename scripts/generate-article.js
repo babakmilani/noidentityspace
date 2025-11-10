@@ -266,13 +266,13 @@ function updateArticlesPage(articleData) {
     const html = fs.readFileSync(CONFIG.articlesPage, "utf8");
     const $ = cheerio.load(html);
 
+    // ✅ FIX: Use proper URL encoding for emoji in the text parameter
+    const emojiEncoded = encodeURIComponent(articleData.emoji);
+    const colorHex = articleData.imageColor.replace("#", "").slice(0, 6);
+
     const card = `
   <a href="articles/${articleData.filename}" class="article-card">
-      <img src="https://placehold.co/600x400/${articleData.imageColor
-            .replace("#", "")
-            .slice(0, 6)}/ffffff?text=${encodeURIComponent(
-                articleData.emoji
-            )}" alt="${articleData.title}" loading="lazy">
+      <img src="https://placehold.co/600x400/${colorHex}/ffffff/png?text=${emojiEncoded}&font=noto-sans" alt="${articleData.title}" loading="lazy">
       <div class="card-content">
           <h3>${articleData.title}</h3>
           <p>${articleData.summary}</p>
