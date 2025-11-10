@@ -2,7 +2,6 @@
 // --- Debug start ---
 console.log("✅ Script started running...");
 
-// Top-level imports (must stay outside try)
 import Anthropic from '@anthropic-ai/sdk';
 import fs from 'fs';
 import path from 'path';
@@ -12,13 +11,44 @@ import * as cheerio from 'cheerio';
 console.log("✅ Imports loaded successfully");
 
 try {
-    // Everything inside your existing main code should go here
     console.log("✅ Starting article generation logic...");
 
-    // (rest of your original script)
+    // DEBUG POINT 1
+    console.log("🔍 Initializing Anthropic client...");
+    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+    // DEBUG POINT 2
+    console.log("🔍 Sending request to Anthropic API...");
+    const completion = await client.messages.create({
+        model: "claude-3-haiku-20240307",
+        max_tokens: 800,
+        messages: [
+            { role: "user", content: "Write a 3-paragraph tech privacy article." }
+        ],
+    });
+
+    console.log("✅ Received response from Anthropic API");
+
+    // DEBUG POINT 3
+    const articleText = completion.content[0]?.text || "(empty response)";
+    console.log("🧠 Article content length:", articleText.length);
+
+    // Create output folder if missing
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const outputDir = path.join(__dirname, "../articles");
+    fs.mkdirSync(outputDir, { recursive: true });
+
+    // DEBUG POINT 4
+    console.log("📂 Writing file to:", outputDir);
+    const filePath = path.join(outputDir, `article-${Date.now()}.html`);
+    fs.writeFileSync(filePath, articleText, "utf8");
+
+    console.log("✅ Article file successfully created:", filePath);
 } catch (err) {
-    console.error("❌ Script failed with error:", err);
+    console.error("❌ Script failed:", err);
 }
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
