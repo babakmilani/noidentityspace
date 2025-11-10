@@ -4,7 +4,7 @@ on:
   schedule:
     # Runs every Monday at 8:00 AM EST (13:00 UTC)
     - cron: '0 13 * * 1'
-  workflow_dispatch: # Allows manual trigger for testing
+  workflow_dispatch: # Manual trigger for testing
 
 permissions:
   contents: write
@@ -14,57 +14,66 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # ✅ 1. Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false # important for manual git auth below
 
+      # ✅ 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      # ✅ 3. Debug – list folders
       - name: Debug file check
         run: |
-          echo "🧭 Checking scripts folder..."
-          ls -R scripts || echo "⚠️ scripts folder not found"
+          echo "Checking repo structure..."
+          ls -R | head -50
 
+      # ✅ 4. Install dependencies
       - name: Install dependencies
         run: |
-          echo "📦 Installing dependencies..."
           npm ci || npm install
           npm install @anthropic-ai/sdk cheerio
 
+      # ✅ 5. Generate the article
       - name: Generate Article
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          echo "🧠 Running article generation script..."
-          node scripts/generate-article.js
+        run: node scripts/generate-article.js
 
+      # ✅ 6. Commit & Push new article
       - name: Commit and Push new article
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "🪶 Preparing to commit new article..."
+          echo "🧠 Preparing to commit changes..."
+
           git config --global user.name "NoIdentity Article Bot"
           git config --global user.email "action@github.com"
 
-          # Stage all generated files (articles + logs)
-          git add -A articles || echo "⚠️ No new articles found"
-          git add articles.html article-report.txt .article-title.txt 2>/dev/null || true
+          # Ensure we're on the main branch
+          git checkout main || git checkout -b main
 
-          # Commit only if there are changes
+          # Add any new or updated files
+          git add -A articles
+          git add articles.html article-report.txt .article-title.txt || true
+
+          # Only commit if there are actual changes
           if git diff --cached --quiet; then
             echo "✅ No new article to commit."
           else
             ARTICLE_TITLE=$(cat .article-title.txt 2>/dev/null || echo "Weekly Article")
-            echo "📰 Committing new article: ${ARTICLE_TITLE}"
+            echo "📰 Committing new article: $ARTICLE_TITLE"
             git commit -m "📰 Auto-generated article: ${ARTICLE_TITLE}"
+
+            echo "🚀 Pushing to main branch..."
             git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git HEAD:main
           fi
 
+      # ✅ 7. Display article generation report
       - name: Display Article Report
         if: always()
         run: |
