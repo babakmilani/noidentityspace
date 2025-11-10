@@ -12,45 +12,58 @@ permissions:
 jobs:
   generate-article:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false # important for manual git auth below
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      - name: Debug file check
+        run: |
+          echo "Checking scripts folder..."
+          ls -R scripts || echo "⚠️ scripts folder not found"
+
       - name: Install dependencies
         run: |
-          npm install @anthropic-ai/sdk
-          npm install cheerio
+          npm ci || npm install
+          npm install @anthropic-ai/sdk cheerio
 
       - name: Generate Article
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node scripts/generate-article.js
 
-      - name: Commit and Push
+      - name: Commit and Push new article
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "NoIdentity Article Bot"
-          git add articles/*.html
-          git add articles.html
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
+          git config --global user.name "NoIdentity Article Bot"
+          git config --global user.email "action@github.com"
+
+          # Stage all generated content
+          git add articles/*.html articles.html article-report.txt .article-title.txt || true
+
+          # Only commit if changes exist
+          if git diff --cached --quiet; then
+            echo "No new article to commit."
           else
             ARTICLE_TITLE=$(cat .article-title.txt 2>/dev/null || echo "Weekly Article")
-            git commit -m "Add automated article: $ARTICLE_TITLE"
-            git push
+            git commit -m "📰 Auto-generated article: ${ARTICLE_TITLE}"
+            git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git HEAD:main
           fi
 
-      - name: Report Status
+      - name: Display Article Report
         if: always()
         run: |
           if [ -f article-report.txt ]; then
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             cat article-report.txt
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           fi
