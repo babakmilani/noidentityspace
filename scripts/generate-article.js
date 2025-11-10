@@ -14,7 +14,7 @@ const anthropic = new Anthropic({
 
 // CONFIG
 const CONFIG = {
-    model: "claude-sonnet-4-20250514", // ✅ FIXED: Correct model name
+    model: "claude-sonnet-4-20250514",
     maxTokens: 8000,
     categories: [
         "Digital Privacy",
@@ -32,7 +32,6 @@ const CONFIG = {
     articleTemplate: path.join(__dirname, "../articles/best-privacy-apps.html"),
 };
 
-// ✅ Utility: Convert to safe slug
 function toSlug(str) {
     return str
         .toLowerCase()
@@ -42,7 +41,6 @@ function toSlug(str) {
         .trim();
 }
 
-// ✅ Utility: Read existing articles
 function getExistingArticles() {
     if (!fs.existsSync(CONFIG.articlesDir)) return [];
     return fs
@@ -62,27 +60,39 @@ function toTitle(filename) {
         .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-// ✅ Pick random subset
 function getRandomArticles(all, exclude, count = 3) {
     const filtered = all.filter((a) => a.name !== exclude);
     const shuffled = filtered.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, Math.min(count, filtered.length));
 }
 
-// ✅ Generate article data via Anthropic
 async function generateArticleData() {
     const existing = getExistingArticles();
-    const systemPrompt = `You are a professional writer for NoIdentity.Space, a privacy and security publication.
-Create unique, high-quality HTML article content. Avoid duplicating these topics:
-${existing.map((a) => a.name).join(", ")}.`;
 
-    const userPrompt = `
-Generate an HTML article on a trending privacy or cybersecurity topic.
-Return JSON with fields: title, category (from ${CONFIG.categories.join(
-        ", "
-    )}), metaDescription, keywords, readingTime, emoji, imageColor, summary, and content (pure HTML).`;
+    const userPrompt = `Generate a comprehensive HTML article on a trending privacy or cybersecurity topic.
 
-    console.log("🤖 Generating article...");
+CRITICAL REQUIREMENTS:
+1. Avoid these existing topics: ${existing.map((a) => a.name).join(", ")}
+2. The article MUST be 2000-3000 words
+3. Include at least 5 major sections with <h2> tags and multiple <h3> subsections
+4. Use proper HTML formatting: <p>, <ul>, <li>, <strong>, etc.
+5. Include at least 1 tip box and 1 warning box in the content
+6. Make it comprehensive, detailed, and professional
+
+Return ONLY valid JSON (no markdown code blocks) with these exact fields:
+{
+  "title": "Complete article title",
+  "category": "One of: Digital Privacy, Digital Security, Online Anonymity, Digital Scams, Future Tech, Policy & Rights, Family Privacy, Digital Wellness, Tech Deep Dive",
+  "metaDescription": "SEO description (150-160 characters)",
+  "keywords": "comma, separated, keywords",
+  "readingTime": "X min read",
+  "emoji": "single emoji for featured image",
+  "imageColor": "#hexcolor",
+  "summary": "2-3 sentence summary",
+  "content": "Full HTML content with proper structure. Must include: <h2> sections, <h3> subsections, <p> paragraphs, <ul><li> lists, <strong> emphasis. Include tip boxes as: <div class='tip-box'><strong>💡 Pro Tip:</strong> Content here</div> and warning boxes as: <div class='warning-box'><strong>⚠️ Warning:</strong> Content here</div>"
+}`;
+
+    console.log("🤖 Generating article with Claude Sonnet 4...");
     const message = await anthropic.messages.create({
         model: CONFIG.model,
         max_tokens: CONFIG.maxTokens,
@@ -90,77 +100,163 @@ Return JSON with fields: title, category (from ${CONFIG.categories.join(
     });
 
     let jsonText = message.content.map((c) => c.text).join("\n");
-    jsonText = jsonText.replace(/```json|```/g, "").trim();
+    jsonText = jsonText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
 
     let articleData;
     try {
         articleData = JSON.parse(jsonText);
-    } catch {
-        console.error("⚠️ JSON parse failed, using fallback");
-        articleData = {
-            title: "Untitled Article",
-            category: "Digital Privacy",
-            metaDescription: "Auto-generated article.",
-            keywords: "privacy, security",
-            readingTime: "8 min read",
-            emoji: "🧠",
-            imageColor: "#6366f1",
-            summary: "Automatically generated content.",
-            content: `<p>${jsonText}</p>`,
-        };
+    } catch (err) {
+        console.error("⚠️ JSON parse failed, attempting cleanup...");
+        // Try to extract JSON from response
+        const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+            try {
+                articleData = JSON.parse(jsonMatch[0]);
+            } catch {
+                throw new Error("Failed to parse JSON from Claude response");
+            }
+        } else {
+            throw new Error("No valid JSON found in Claude response");
+        }
     }
 
     articleData.filename = `${toSlug(articleData.title)}.html`;
     return articleData;
 }
 
-// ✅ Create HTML from template
 function createArticleHTML(articleData) {
     const template = fs.readFileSync(CONFIG.articleTemplate, "utf8");
     const $ = cheerio.load(template);
 
-    // Replace key info
+    // Update meta tags
     $("title").text(`${articleData.title} | NoIdentity.Space`);
     $('meta[name="description"]').attr("content", articleData.metaDescription);
     $('meta[name="keywords"]').attr("content", articleData.keywords);
-    $("h1").first().text(articleData.title);
+    $('meta[property="og:title"]').attr("content", articleData.title);
+    $('meta[property="og:description"]').attr("content", articleData.metaDescription);
+
+    // Update header
     $(".article-category").first().text(articleData.category);
-    $(".article-meta span").first().text(`📅 ${new Date().toLocaleDateString()}`);
+    $("h1").first().text(articleData.title);
+
+    // Format date properly
+    const date = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    $(".article-meta span").first().text(`📅 ${date}`);
     $(".article-meta span").eq(2).text(`⏱️ ${articleData.readingTime}`);
+
+    // Update featured image emoji
     $(".featured-image").text(articleData.emoji);
-    $(".article-content").html(articleData.content);
+
+    // Clear existing content and insert new content
+    const contentContainer = $(".article-content");
+    contentContainer.find("p, h2, h3, ul, div.tip-box, div.warning-box").remove();
+
+    // Insert content with ad placeholders
+    const contentParts = articleData.content.split("</h2>");
+    let finalContent = `<div class="featured-image">${articleData.emoji}</div>`;
+
+    // Add introduction
+    finalContent += `<p><strong>Introduction:</strong> ${articleData.summary}</p>`;
+
+    // Add first ad placeholder
+    finalContent += `
+    <div class="ad-placeholder">
+        <p class="ad-label">Ad Slot 1 Placeholder (Insert AdSense In-Article Code here after approval)</p>
+        <ins class="adsbygoogle" style="display:block; text-align:center;"
+            data-ad-client="ca-pub-2379517169183719" data-ad-slot="YOUR_AD_SLOT_NUMBER_1" data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+    </div>`;
+
+    // Insert content with ads strategically placed
+    const sections = contentParts.length;
+    contentParts.forEach((part, index) => {
+        if (index < sections - 1) {
+            finalContent += part + "</h2>";
+
+            // Add ad after 2nd and 4th sections
+            if (index === 1) {
+                finalContent += `
+                <div class="ad-placeholder">
+                    <p class="ad-label">Ad Slot 2 Placeholder (Insert AdSense In-Article Code here after approval)</p>
+                    <ins class="adsbygoogle" style="display:block; text-align:center;"
+                        data-ad-client="ca-pub-2379517169183719" data-ad-slot="YOUR_AD_SLOT_NUMBER_2" data-ad-format="auto"
+                        data-full-width-responsive="true"></ins>
+                </div>`;
+            }
+            if (index === 3) {
+                finalContent += `
+                <div class="ad-placeholder">
+                    <p class="ad-label">Ad Slot 3 Placeholder (Insert AdSense In-Article Code here after approval)</p>
+                    <ins class="adsbygoogle" style="display:block; text-align:center;"
+                        data-ad-client="ca-pub-2379517169183719" data-ad-slot="YOUR_AD_SLOT_NUMBER_3" data-ad-format="auto"
+                        data-full-width-responsive="true"></ins>
+                </div>`;
+            }
+        } else {
+            finalContent += part;
+        }
+    });
+
+    // Add share buttons
+    finalContent += `
+    <div class="share-buttons">
+        <a href="#" class="share-button">📱 Share on Twitter</a>
+        <a href="#" class="share-button">📘 Share on Facebook</a>
+        <a href="#" class="share-button">💼 Share on LinkedIn</a>
+        <a href="#" class="share-button">📋 Copy Link</a>
+    </div>`;
+
+    // Add author box
+    finalContent += `
+    <div class="author-box">
+        <div class="author-avatar">✍️</div>
+        <div class="author-info">
+            <h4>Written by the NoIdentity Team</h4>
+            <p>Our team continuously tests and vets privacy software to ensure you have the most effective tools
+                to secure your digital life and maintain your anonymity.</p>
+        </div>
+    </div>`;
+
+    contentContainer.html(finalContent);
+
+    // Generate Table of Contents from h2 headings
+    const toc = $(".toc");
+    toc.empty();
+    $(".article-content h2").each(function () {
+        const heading = $(this);
+        const text = heading.text();
+        const id = toSlug(text);
+        heading.attr("id", id);
+        toc.append(`<li><a href="#${id}">${text}</a></li>`);
+    });
 
     return $;
 }
 
-// ✅ Add Related Articles
 function addRelatedArticles($, currentSlug) {
     const allArticles = getExistingArticles();
     const related = getRandomArticles(allArticles, currentSlug, 3);
     if (related.length === 0) return $;
 
-    const section = `
-  <section class="related-articles">
-    <h2>Related Articles</h2>
-    <div class="related-grid">
-      ${related
-            .map(
-                (a) => `
-        <a href="${a.file}" class="related-card">
-          <div class="related-thumb">📰</div>
-          <h3>${a.title}</h3>
-        </a>`
-            )
-            .join("\n")}
-    </div>
-  </section>
-  `;
+    const relatedSection = $(".sidebar-section").eq(1);
+    relatedSection.find("h3").text("Related Articles");
+    relatedSection.find("a.related-post").remove();
 
-    $(".article-content").after(section);
+    related.forEach((article) => {
+        relatedSection.append(`
+        <a href="${article.file}" class="related-post">
+            <h4>📰 ${article.title}</h4>
+            <p>Essential privacy reading</p>
+        </a>`);
+    });
+
     return $;
 }
 
-// ✅ Update articles.html
 function updateArticlesPage(articleData) {
     if (!fs.existsSync(CONFIG.articlesPage)) {
         console.warn("⚠️ articles.html not found, skipping update.");
@@ -191,7 +287,6 @@ function updateArticlesPage(articleData) {
     console.log(`🧩 Updated articles.html with "${articleData.title}"`);
 }
 
-// ✅ Main Process
 async function main() {
     try {
         console.log("🚀 Starting article generation...");
@@ -218,6 +313,7 @@ async function main() {
         );
     } catch (error) {
         console.error("❌ Failed:", error);
+        process.exit(1);
     }
 }
 
