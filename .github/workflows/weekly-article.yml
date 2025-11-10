@@ -27,34 +27,40 @@ jobs:
 
       - name: Debug file check
         run: |
-          echo "Checking scripts folder..."
+          echo "🧭 Checking scripts folder..."
           ls -R scripts || echo "⚠️ scripts folder not found"
 
       - name: Install dependencies
         run: |
+          echo "📦 Installing dependencies..."
           npm ci || npm install
           npm install @anthropic-ai/sdk cheerio
 
       - name: Generate Article
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node scripts/generate-article.js
+        run: |
+          echo "🧠 Running article generation script..."
+          node scripts/generate-article.js
 
       - name: Commit and Push new article
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "🪶 Preparing to commit new article..."
           git config --global user.name "NoIdentity Article Bot"
           git config --global user.email "action@github.com"
 
-          # Stage all generated content
-          git add articles/*.html articles.html article-report.txt .article-title.txt || true
+          # Stage all generated files (articles + logs)
+          git add -A articles || echo "⚠️ No new articles found"
+          git add articles.html article-report.txt .article-title.txt 2>/dev/null || true
 
-          # Only commit if changes exist
+          # Commit only if there are changes
           if git diff --cached --quiet; then
-            echo "No new article to commit."
+            echo "✅ No new article to commit."
           else
             ARTICLE_TITLE=$(cat .article-title.txt 2>/dev/null || echo "Weekly Article")
+            echo "📰 Committing new article: ${ARTICLE_TITLE}"
             git commit -m "📰 Auto-generated article: ${ARTICLE_TITLE}"
             git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git HEAD:main
           fi
@@ -66,4 +72,6 @@ jobs:
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             cat article-report.txt
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          else
+            echo "⚠️ No article-report.txt file found."
           fi
