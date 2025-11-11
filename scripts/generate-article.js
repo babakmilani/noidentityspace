@@ -107,7 +107,6 @@ Return ONLY valid JSON (no markdown code blocks) with these exact fields:
         articleData = JSON.parse(jsonText);
     } catch (err) {
         console.error("⚠️ JSON parse failed, attempting cleanup...");
-        // Try to extract JSON from response
         const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
             try {
@@ -128,18 +127,15 @@ function createArticleHTML(articleData) {
     const template = fs.readFileSync(CONFIG.articleTemplate, "utf8");
     const $ = cheerio.load(template);
 
-    // Update meta tags
     $("title").text(`${articleData.title} | NoIdentity.Space`);
     $('meta[name="description"]').attr("content", articleData.metaDescription);
     $('meta[name="keywords"]').attr("content", articleData.keywords);
     $('meta[property="og:title"]').attr("content", articleData.title);
     $('meta[property="og:description"]').attr("content", articleData.metaDescription);
 
-    // Update header
     $(".article-category").first().text(articleData.category);
     $("h1").first().text(articleData.title);
 
-    // Format date properly
     const date = new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -148,21 +144,16 @@ function createArticleHTML(articleData) {
     $(".article-meta span").first().text(`📅 ${date}`);
     $(".article-meta span").eq(2).text(`⏱️ ${articleData.readingTime}`);
 
-    // Update featured image emoji
     $(".featured-image").text(articleData.emoji);
 
-    // Clear existing content and insert new content
     const contentContainer = $(".article-content");
     contentContainer.find("p, h2, h3, ul, div.tip-box, div.warning-box").remove();
 
-    // Insert content with ad placeholders
     const contentParts = articleData.content.split("</h2>");
     let finalContent = `<div class="featured-image">${articleData.emoji}</div>`;
 
-    // Add introduction
     finalContent += `<p><strong>Introduction:</strong> ${articleData.summary}</p>`;
 
-    // Add first ad placeholder
     finalContent += `
     <div class="ad-placeholder">
         <p class="ad-label">Ad Slot 1 Placeholder (Insert AdSense In-Article Code here after approval)</p>
@@ -171,13 +162,11 @@ function createArticleHTML(articleData) {
             data-full-width-responsive="true"></ins>
     </div>`;
 
-    // Insert content with ads strategically placed
     const sections = contentParts.length;
     contentParts.forEach((part, index) => {
         if (index < sections - 1) {
             finalContent += part + "</h2>";
 
-            // Add ad after 2nd and 4th sections
             if (index === 1) {
                 finalContent += `
                 <div class="ad-placeholder">
@@ -201,7 +190,6 @@ function createArticleHTML(articleData) {
         }
     });
 
-    // Add share buttons
     finalContent += `
     <div class="share-buttons">
         <a href="#" class="share-button">📱 Share on Twitter</a>
@@ -210,7 +198,6 @@ function createArticleHTML(articleData) {
         <a href="#" class="share-button">📋 Copy Link</a>
     </div>`;
 
-    // Add author box
     finalContent += `
     <div class="author-box">
         <div class="author-avatar">✍️</div>
@@ -223,7 +210,6 @@ function createArticleHTML(articleData) {
 
     contentContainer.html(finalContent);
 
-    // Generate Table of Contents from h2 headings
     const toc = $(".toc");
     toc.empty();
     $(".article-content h2").each(function () {
@@ -266,13 +252,12 @@ function updateArticlesPage(articleData) {
     const html = fs.readFileSync(CONFIG.articlesPage, "utf8");
     const $ = cheerio.load(html);
 
-    // ✅ FIX: Use proper URL encoding for emoji in the text parameter
-    const emojiEncoded = encodeURIComponent(articleData.emoji);
     const colorHex = articleData.imageColor.replace("#", "").slice(0, 6);
+    const titleEncoded = encodeURIComponent(articleData.title);
 
     const card = `
   <a href="articles/${articleData.filename}" class="article-card">
-      <img src="https://placehold.co/600x400/${colorHex}/ffffff/png?text=${emojiEncoded}&font=noto-sans" alt="${articleData.title}" loading="lazy">
+      <img src="https://placehold.co/600x400/${colorHex}/ffffff/png?text=${titleEncoded}" alt="${articleData.title}" loading="lazy">
       <div class="card-content">
           <h3>${articleData.title}</h3>
           <p>${articleData.summary}</p>
@@ -295,7 +280,6 @@ async function main() {
         const articleData = await generateArticleData();
         let $ = createArticleHTML(articleData);
 
-        // Add Related Articles
         $ = addRelatedArticles($, toSlug(articleData.title));
 
         const html = $.html();
