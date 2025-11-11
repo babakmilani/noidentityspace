@@ -1,6 +1,6 @@
-📰 Quantum Computing and the End of Encryption: Preparing for the Post-Quantum World
-📂 quantum-computing-and-the-end-of-encryption-preparing-for-the-post-quantum-world.html
-🏷️ Future Tech
+📰 The Rise of AI-Powered Social Engineering: How Machine Learning is Revolutionizing Cyber Attacks
+📂 the-rise-of-ai-powered-social-engineering-how-machine-learning-is-revolutionizing-cyber-attacks.html
+🏷️ Digital Security
 
 Summary:
-Quantum computers pose an existential threat to current encryption methods that protect our digital world. This comprehensive guide explores the quantum threat timeline, how quantum computing breaks traditional cryptography, and the race to develop quantum-resistant security solutions.
+Artificial intelligence is fundamentally changing the landscape of social engineering attacks, enabling cybercriminals to create highly personalized and convincing scams at unprecedented scale. Understanding these AI-powered threats is crucial for defending against the next generation of cyber attacks.
